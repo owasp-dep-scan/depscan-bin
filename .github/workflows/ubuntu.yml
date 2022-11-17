@@ -1,0 +1,46 @@
+name: Build Linux Binaries
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  Blint-GNU-Build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Checkout tools repo
+      uses: actions/checkout@v3
+      with:
+        repository: AppThreat/dep-scan
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install pyinstaller
+      run: |
+        python3 -m pip install twine setuptools wheel pyinstaller
+        cd dep-scan
+        pip3 install -r requirements.txt
+        wget https://github.com/upx/upx/releases/download/v4.0.0/upx-4.0.0-amd64_linux.tar.xz
+        tar -xvf upx-4.0.0-amd64_linux.tar.xz
+        chmod +x upx-4.0.0-amd64_linux/upx
+        sudo cp upx-4.0.0-amd64_linux/upx /usr/local/bin/
+    - name: Binary gnu build
+      run: |
+        cd dep-scan
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --collect-all depscan --upx-dir /usr/local/bin
+        ./dist/depscan --help
+        ./dist/depscan -i . -o /tmp/depscan.json
+      env:
+        PYTHONIOENCODING: utf-8
+        LANG: en_US.utf-8
+    - uses: actions/upload-artifact@v1
+      with:
+        path: ./dep-scan/dist
+        name: depscan-linux-gnu
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          dep-scan/dist/depscan
