@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Blint-GNU-Build:
+  Depscan-GNU-Build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -13,6 +13,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: AppThreat/dep-scan
+        path: dep-scan
     - uses: actions/setup-python@v4
       with:
         python-version: '3.10'
