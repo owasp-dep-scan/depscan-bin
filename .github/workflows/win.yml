@@ -53,7 +53,7 @@ jobs:
         npm install -g pkg
         cd cdxgen
         npm install
-        pkg -t node18-win package.json --out-path dist
+        pkg -t node18-win --public package.json --out-path dist
         .\dist\cdxgen.exe --version
     - name: Build cdxgen plugins
       run: |
@@ -64,9 +64,9 @@ jobs:
         cd dep-scan
         Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v4.0.0/upx-4.0.0-win64.zip -UseBasicParsing -OutFile upx-4.0.0-win64.zip
         Expand-Archive -Path upx-4.0.0-win64.zip -DestinationPath . -Force
-
         pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/dist/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --upx-dir upx-4.0.0-win64
         .\dist\depscan.exe --help
+        (Get-FileHash .\dist\depscan.exe).hash | Out-File -FilePath .\dist\depscan.exe.sha256
       env:
         PYTHONIOENCODING: utf-8
         LANG: en_US.utf-8
@@ -81,3 +81,4 @@ jobs:
       with:
         files: |
           dep-scan/dist/depscan.exe
+          dep-scan/dist/depscan.exe.sha256
