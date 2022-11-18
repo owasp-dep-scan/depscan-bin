@@ -47,6 +47,7 @@ jobs:
         python -m pip install twine setuptools wheel pyinstaller
         cd dep-scan
         pip install -r requirements.txt
+        pyinstaller --help
     - name: Produce cdxgen pkg
       run: |
         npm install -g pkg
@@ -61,7 +62,10 @@ jobs:
     - name: Binary windows build
       run: |
         cd dep-scan
-        python -m pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/dist/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt
+        Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v4.0.0/upx-4.0.0-win64.zip -UseBasicParsing -OutFile upx-4.0.0-win64.zip
+        Expand-Archive -Path upx-4.0.0-win64.zip -DestinationPath . -Force
+
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/dist/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --upx-dir upx-4.0.0-win64
         .\dist\depscan.exe --help
       env:
         PYTHONIOENCODING: utf-8
