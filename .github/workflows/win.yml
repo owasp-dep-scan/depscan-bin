@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Blint-Build:
+  Depscan-Windows-Build:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
