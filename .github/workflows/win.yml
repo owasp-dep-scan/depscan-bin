@@ -1,0 +1,83 @@
+name: Build Windows Binaries
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  Depscan-Windows-Build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Checkout dep-scan
+      uses: actions/checkout@v3
+      with:
+        repository: AppThreat/dep-scan
+        path: dep-scan
+    - name: Checkout cdxgen
+      uses: actions/checkout@v3
+      with:
+        repository: AppThreat/cdxgen
+        path: cdxgen
+    - name: Checkout cdxgen
+      uses: actions/checkout@v3
+      with:
+        repository: ngcloudsec/cdxgen-plugins-bin
+        path: cdxgen-plugins-bin
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '^1.19.1'
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+    - name: Install pyinstaller
+      run: |
+        python -m pip install twine setuptools wheel pyinstaller tzdata
+        cd dep-scan
+        pip install -r requirements.txt
+        pyinstaller --help
+    - name: Produce cdxgen pkg
+      run: |
+        npm install -g pkg
+        cd cdxgen
+        npm install
+        pkg -t node18-win package.json --out-path dist
+        .\dist\cdxgen.exe --version
+    - name: Build cdxgen plugins
+      run: |
+        cd cdxgen-plugins-bin
+        .\build.ps1
+    - name: Binary windows build
+      run: |
+        cd dep-scan
+        Invoke-WebRequest -Uri https://github.com/upx/upx/releases/download/v4.0.0/upx-4.0.0-win64.zip -UseBasicParsing -OutFile upx-4.0.0-win64.zip
+        Expand-Archive -Path upx-4.0.0-win64.zip -DestinationPath . -Force
+
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/dist/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --upx-dir upx-4.0.0-win64
+        .\dist\depscan.exe --help
+      env:
+        PYTHONIOENCODING: utf-8
+        LANG: en_US.utf-8
+    - uses: actions/upload-artifact@v1
+      if: startsWith(github.ref, 'refs/tags/') != true
+      with:
+        path: dep-scan/dist
+        name: depscan-windows
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          dep-scan/dist/depscan.exe
