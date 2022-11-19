@@ -62,7 +62,7 @@ jobs:
     - name: Build cdxgen plugins
       run: |
         cd cdxgen-plugins-bin
-        bash build.sh
+        bash build-linux.sh
     - name: Binary amd64 build
       run: |
         cd dep-scan
