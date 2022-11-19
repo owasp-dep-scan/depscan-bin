@@ -47,10 +47,10 @@ jobs:
         python3 -m pip install twine setuptools wheel pyinstaller
         cd dep-scan
         pip3 install -r requirements.txt
-        wget https://github.com/upx/upx/releases/download/v4.0.0/upx-4.0.0-amd64_linux.tar.xz
-        tar -xvf upx-4.0.0-amd64_linux.tar.xz
-        chmod +x upx-4.0.0-amd64_linux/upx
-        sudo cp upx-4.0.0-amd64_linux/upx /usr/local/bin/
+        wget https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-amd64_linux.tar.xz
+        tar -xvf upx-4.0.1-amd64_linux.tar.xz
+        chmod +x upx-4.0.1-amd64_linux/upx
+        sudo cp upx-4.0.1-amd64_linux/upx /usr/local/bin/
     - name: Produce cdxgen pkg
       run: |
         sudo npm install -g pkg
@@ -73,7 +73,7 @@ jobs:
     - name: BLint
       run: |
         pip3 install blint
-        blint -i dist -o /tmp/reports
+        blint -i dep-scan/dist -o /tmp/reports
       env:
         PYTHONIOENCODING: utf-8
         LANG: en_US.utf-8
