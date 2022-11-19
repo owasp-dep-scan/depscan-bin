@@ -73,13 +73,6 @@ jobs:
         sha256sum ./dist/depscan-linux-musl > ./dist/depscan-linux-musl.sha256
         ./dist/depscan-linux-musl --help
         ./dist/depscan-linux-musl -i . -o /tmp/depscan.json
-    - name: BLint
-      run: |
-        pip3 install blint
-        blint -i dep-scan/dist -o /tmp/reports
-      env:
-        PYTHONIOENCODING: utf-8
-        LANG: en_US.utf-8
     - uses: actions/upload-artifact@v1
       if: startsWith(github.ref, 'refs/tags/') != true
       with:
