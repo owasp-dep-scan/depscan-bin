@@ -9,3 +9,17 @@ Download the executable binary for your operating system from the [releases page
 - dep-scan with Python 3.10
 - cdxgen with Node.js 18
 - cdxgen binary plugins
+
+On Linux
+```
+curl -LO https://github.com/ngcloudsec/depscan-bin/releases/download/v3.2.1/depscan-linux-amd64
+chmod +x depscan-linux-amd64
+./depscan-linux-amd64 --help
+```
+
+On Windows
+
+```
+curl -LO https://github.com/ngcloudsec/depscan-bin/releases/download/v3.2.1/depscan.exe
+.\depscan.exe --help
+```
