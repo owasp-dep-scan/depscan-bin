@@ -94,8 +94,8 @@ jobs:
         cd ./dep-scan/dist
         echo $GITHUB_TOKEN | oras login ghcr.io -u $GITHUB_USERNAME --password-stdin
         oras push ghcr.io/ngcloudsec/depscan:v3 \
-          --config ../config.json:application/vnd.oras.config.v1+json \
-          --annotation-file ../annotations.json \
+          --config ../../config.json:application/vnd.oras.config.v1+json \
+          --annotation-file ../../annotations.json \
           ./depscan-linux-amd64:application/vnd.ngcloudsec.depscan.layer.v1+tar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
