@@ -1,0 +1,8 @@
+{
+    "$config": {
+        "org.opencontainers.image.title": "depscan",
+        "org.opencontainers.image.vendor": "ngcloudsec",
+        "org.opencontainers.image.licenses": "Apache-2.0",
+        "org.opencontainers.image.description": "Single executable binary for dep-scan"
+    }
+}
