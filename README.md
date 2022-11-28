@@ -4,7 +4,7 @@ Repository containing the binaries for [depscan](https://github.com/AppThreat/de
 
 ![Depscan logo](dep-scan.png)
 
-## Singe binary executables
+## Single binary executables
 
 Download the executable binary for your operating system from the [releases page](https://github.com/ngcloudsec/depscan-bin/releases). These binary bundle the following:
 
