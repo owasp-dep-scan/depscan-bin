@@ -25,3 +25,7 @@ On Windows
 curl -LO https://github.com/ngcloudsec/depscan-bin/releases/download/v3.5.3/depscan.exe
 .\depscan.exe --help
 ```
+
+## Discord support
+
+The developers could be reached via the [discord](https://discord.gg/DCNxzaeUpd) channel.
