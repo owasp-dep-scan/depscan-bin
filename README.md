@@ -6,7 +6,7 @@ Repository containing the binaries for [depscan](https://github.com/AppThreat/de
 
 ## Single binary executables
 
-Download the executable binary for your operating system from the [releases page](https://github.com/ngcloudsec/depscan-bin/releases). These binary bundle the following:
+Download the executable binary for your operating system from the [releases page](https://github.com/appthreat/depscan-bin/releases). These binary bundle the following:
 
 - dep-scan with Python 3.10
 - cdxgen with Node.js 18
@@ -14,7 +14,7 @@ Download the executable binary for your operating system from the [releases page
 
 On Linux
 ```
-curl -LO https://github.com/ngcloudsec/depscan-bin/releases/download/v3.5.3/depscan-linux-amd64
+curl -LO https://github.com/appthreat/depscan-bin/releases/download/v3.5.3/depscan-linux-amd64
 chmod +x depscan-linux-amd64
 ./depscan-linux-amd64 --help
 ```
@@ -22,7 +22,7 @@ chmod +x depscan-linux-amd64
 On Windows
 
 ```
-curl -LO https://github.com/ngcloudsec/depscan-bin/releases/download/v3.5.3/depscan.exe
+curl -LO https://github.com/appthreat/depscan-bin/releases/download/v3.5.3/depscan.exe
 .\depscan.exe --help
 ```
 
