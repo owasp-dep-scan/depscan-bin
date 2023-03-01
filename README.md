@@ -14,7 +14,7 @@ Download the executable binary for your operating system from the [releases page
 
 On Linux
 ```
-curl -LO https://github.com/appthreat/depscan-bin/releases/download/v3.5.3/depscan-linux-amd64
+curl -LO https://github.com/appthreat/depscan-bin/releases/download/v4.0.0/depscan-linux-amd64
 chmod +x depscan-linux-amd64
 ./depscan-linux-amd64 --help
 ```
@@ -22,7 +22,7 @@ chmod +x depscan-linux-amd64
 On Windows
 
 ```
-curl -LO https://github.com/appthreat/depscan-bin/releases/download/v3.5.3/depscan.exe
+curl -LO https://github.com/appthreat/depscan-bin/releases/download/v4.0.0/depscan.exe
 .\depscan.exe --help
 ```
 
