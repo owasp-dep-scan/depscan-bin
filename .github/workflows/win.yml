@@ -17,12 +17,12 @@ jobs:
     - name: Checkout cdxgen
       uses: actions/checkout@v3
       with:
-        repository: AppThreat/cdxgen
+        repository: CycloneDX/cdxgen
         path: cdxgen
     - name: Checkout cdxgen
       uses: actions/checkout@v3
       with:
-        repository: ngcloudsec/cdxgen-plugins-bin
+        repository: CycloneDX/cdxgen-plugins-bin
         path: cdxgen-plugins-bin
     - uses: actions/setup-python@v4
       with:
