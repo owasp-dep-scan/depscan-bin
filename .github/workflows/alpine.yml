@@ -64,7 +64,7 @@ jobs:
         echo "/usr/local/go/bin" >> $GITHUB_PATH
         cd cdxgen-plugins-bin
         chmod +x build.sh
-        ./build-linux.sh
+        ./build.sh
     - name: Binary alpine build
       run: |
         cd dep-scan
