@@ -12,20 +12,6 @@ Download the executable binary for your operating system from the [releases page
 - cdxgen with Node.js 18
 - cdxgen binary plugins
 
-On Linux
-```
-curl -LO https://github.com/AppThreat/depscan-bin/releases/download/v4.0.3/depscan-linux-amd64
-chmod +x depscan-linux-amd64
-./depscan-linux-amd64 --help
-```
-
-On Windows
-
-```
-curl -LO https://github.com/appthreat/depscan-bin/releases/download/v4.0.3/depscan.exe
-.\depscan.exe --help
-```
-
 ## Discord support
 
 The developers could be reached via the [discord](https://discord.gg/DCNxzaeUpd) channel.
