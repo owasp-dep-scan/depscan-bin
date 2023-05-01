@@ -48,7 +48,7 @@ jobs:
           ${{ runner.os }}-go-
     - name: Install pyinstaller
       run: |
-        python3 -m pip install twine setuptools wheel pyinstaller
+        python3 -m pip install setuptools pyinstaller
         cd dep-scan
         pip3 install -r requirements.txt
         wget https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-amd64_linux.tar.xz

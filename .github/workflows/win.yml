@@ -44,7 +44,7 @@ jobs:
           ${{ runner.os }}-go-
     - name: Install pyinstaller
       run: |
-        python -m pip install twine setuptools wheel pyinstaller tzdata
+        python -m pip install setuptools pyinstaller tzdata
         cd dep-scan
         pip install -r requirements.txt
         pyinstaller --help
