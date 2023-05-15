@@ -60,8 +60,8 @@ jobs:
       run: |
         sudo npm install -g pkg
         cd cdxgen
-        npm install
-        pkg -t node18-linux --public package.json --out-path dist
+        npm install --omit=dev
+        pkg -t node18-linux --no-bytecode --no-native-build --compress GZip --public package.json --out-path dist
         chmod +x dist/cdxgen
         ./dist/cdxgen --version
     - name: Build cdxgen plugins
