@@ -3,7 +3,7 @@ name: Build Linux Binaries
 on:
   push:
   schedule:
-  - cron: "0 */12 * * *"
+  - cron: "0 2 * * *"
   workflow_dispatch:
 env:
   REGISTRY: ghcr.io
@@ -30,11 +30,11 @@ jobs:
         path: cdxgen-plugins-bin
     - uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: 20.x
     - uses: actions/setup-go@v3
       with:
         go-version: '^1.19.1'
@@ -52,16 +52,16 @@ jobs:
         python3 -m pip install setuptools pyinstaller
         cd dep-scan
         pip3 install -r requirements.txt
-        wget https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-amd64_linux.tar.xz
-        tar -xvf upx-4.0.1-amd64_linux.tar.xz
-        chmod +x upx-4.0.1-amd64_linux/upx
-        sudo cp upx-4.0.1-amd64_linux/upx /usr/local/bin/
+        wget https://github.com/upx/upx/releases/download/v4.0.2/upx-4.0.2-amd64_linux.tar.xz
+        tar -xvf upx-4.0.2-amd64_linux.tar.xz
+        chmod +x upx-4.0.2-amd64_linux/upx
+        sudo cp upx-4.0.2-amd64_linux/upx /usr/local/bin/
     - name: Produce cdxgen pkg
       run: |
         sudo npm install -g pkg
         cd cdxgen
         npm install --omit=dev
-        pkg -t node18-linux --no-bytecode --no-native-build --compress GZip --public package.json --out-path dist
+        pkg -t node20-linux --no-bytecode --no-native-build --compress GZip --public --out-path dist bin/cdxgen
         chmod +x dist/cdxgen
         ./dist/cdxgen --version
     - name: Build cdxgen plugins
