@@ -9,7 +9,7 @@ Repository containing the binaries for [depscan](https://github.com/AppThreat/de
 Download the executable binary for your operating system from the [releases page](https://github.com/appthreat/depscan-bin/releases). These binary bundle the following:
 
 - dep-scan with Python 3.11
-- cdxgen with Node.js 20
+- cdxgen with Node.js 18
 - cdxgen binary plugins
 
 ## Discord support
