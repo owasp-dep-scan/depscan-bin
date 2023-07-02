@@ -30,7 +30,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18.x
+        node-version: 20.x
     - uses: actions/setup-go@v3
       with:
         go-version: '^1.19.1'
@@ -51,11 +51,11 @@ jobs:
         pyinstaller --help
     - name: Produce cdxgen pkg
       run: |
-        npm install -g pkg
         cd cdxgen
-        npm install --omit=dev
-        pkg -t node18-win --public --out-path dist bin/cdxgen
-        .\dist\cdxgen.exe --version
+        npm install
+        npx caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+        .\cdxgen.exe --verion
+        (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
     - name: Build cdxgen plugins
       run: |
         cd cdxgen-plugins-bin
@@ -63,7 +63,7 @@ jobs:
     - name: Binary windows build
       run: |
         cd dep-scan
-        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/dist/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --noupx
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --noupx
         .\dist\depscan.exe --help
         .\dist\depscan.exe -t os -o ..\depscan.json
         (Get-FileHash .\dist\depscan.exe).hash | Out-File -FilePath .\dist\depscan.exe.sha256
