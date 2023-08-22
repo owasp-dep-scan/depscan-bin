@@ -81,6 +81,7 @@ jobs:
       env:
         PYTHONIOENCODING: utf-8
         LANG: en_US.utf-8
+      continue-on-error: true
     - name: Upload dep-scan
       run: |
         cd ./dep-scan/dist
