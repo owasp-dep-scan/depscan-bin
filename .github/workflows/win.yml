@@ -54,7 +54,7 @@ jobs:
         cd cdxgen
         npm install
         npx caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-        .\cdxgen.exe --verion
+        .\cdxgen.exe --version
         (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
     - name: Build cdxgen plugins
       run: |

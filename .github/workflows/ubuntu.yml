@@ -77,7 +77,7 @@ jobs:
     - name: BLint
       run: |
         pip3 install blint
-        blint -i dep-scan/dist -o /tmp/reports
+        blint -i dep-scan/dist/depscan-linux-amd64 -o /tmp/reports
       env:
         PYTHONIOENCODING: utf-8
         LANG: en_US.utf-8
