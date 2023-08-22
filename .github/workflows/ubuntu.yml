@@ -92,7 +92,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_USERNAME: ${{ github.actor }}
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v3
       if: startsWith(github.ref, 'refs/tags/') != true
       with:
         path: ./dep-scan/dist

@@ -72,7 +72,7 @@ jobs:
         pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan-linux-musl --add-data="vendor:vendor" --add-binary="../cdxgen/cdxgen:local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-linux-amd64:local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-linux-amd64:local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/trivy/trivy-cdxgen-linux-amd64:local_bin/trivy" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-cdxgen-linux-amd64:local_bin/cargo-auditable" --collect-submodules depscan --noupx
         sha256sum ./dist/depscan-linux-musl > ./dist/depscan-linux-musl.sha256
         ./dist/depscan-linux-musl --help
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v3
       if: startsWith(github.ref, 'refs/tags/') != true
       with:
         path: ./dep-scan/dist

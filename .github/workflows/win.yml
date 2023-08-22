@@ -70,7 +70,7 @@ jobs:
       env:
         PYTHONIOENCODING: utf-8
         LANG: en_US.utf-8
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v3
       if: startsWith(github.ref, 'refs/tags/') != true
       with:
         path: dep-scan/dist
