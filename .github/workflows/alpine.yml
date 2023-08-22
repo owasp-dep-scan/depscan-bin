@@ -47,7 +47,7 @@ jobs:
         python3 -m pip install --upgrade pip
         python3 -m pip install setuptools pyinstaller
         cd dep-scan
-        python3 -m build
+        python3 -m pip install ".[dev]"
         wget https://github.com/upx/upx/releases/download/v4.0.1/upx-4.0.1-amd64_linux.tar.xz
         tar -xvf upx-4.0.1-amd64_linux.tar.xz
         chmod +x upx-4.0.1-amd64_linux/upx
