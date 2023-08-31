@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
+    - name: Trim CI agent
+      run: |
+        chmod +x free_disk_space.sh
+        ./free_disk_space.sh
     - name: Checkout dep-scan
       uses: actions/checkout@v3
       with:
