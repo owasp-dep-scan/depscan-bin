@@ -2,8 +2,6 @@ name: Build Linux Binaries
 
 on:
   push:
-  schedule:
-  - cron: "0 2 * * *"
   workflow_dispatch:
 env:
   REGISTRY: ghcr.io
