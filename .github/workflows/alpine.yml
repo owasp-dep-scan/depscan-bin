@@ -9,23 +9,23 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3.10-alpine
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install packages
       run: |
         apk update
         apk add py3-pip python3-dev curl wget jq tree cmake make gcc git g++ musl-dev libffi-dev openssl-dev py3-cffi py3-twine py3-wheel py3-setuptools ca-certificates zlib-dev xz nodejs npm bash tar gcompat
     - name: Checkout dep-scan
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: owasp-dep-scan/dep-scan
         path: dep-scan
     - name: Checkout cdxgen
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: CycloneDX/cdxgen
         path: cdxgen
     - name: Checkout cdxgen
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: CycloneDX/cdxgen-plugins-bin
         path: cdxgen-plugins-bin

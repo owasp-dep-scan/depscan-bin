@@ -8,19 +8,19 @@ jobs:
   Depscan-Windows-Build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Checkout dep-scan
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: owasp-dep-scan/dep-scan
         path: dep-scan
     - name: Checkout cdxgen
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: CycloneDX/cdxgen
         path: cdxgen
     - name: Checkout cdxgen
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: CycloneDX/cdxgen-plugins-bin
         path: cdxgen-plugins-bin
