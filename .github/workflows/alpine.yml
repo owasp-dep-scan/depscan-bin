@@ -17,7 +17,7 @@ jobs:
     - name: Checkout dep-scan
       uses: actions/checkout@v3
       with:
-        repository: AppThreat/dep-scan
+        repository: owasp-dep-scan/dep-scan
         path: dep-scan
     - name: Checkout cdxgen
       uses: actions/checkout@v3

@@ -1,6 +1,6 @@
 # depscan-bin
 
-Repository containing the binaries for [depscan](https://github.com/AppThreat/dep-scan) - the dependency scanning tool. depscan is also available on [PyPI](https://pypi.org/project/appthreat-depscan/)
+Repository containing the binaries for [depscan](https://github.com/owasp-dep-scan/dep-scan) - the dependency scanning tool. depscan is also available on [PyPI](https://pypi.org/project/appthreat-depscan/)
 
 ![Depscan logo](dep-scan.png)
 
