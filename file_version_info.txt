@@ -30,14 +30,14 @@ VSVersionInfo(
       [
       StringTable(
         u'040904B0',
-        [StringStruct(u'CompanyName', u'Team Rosa'),
+        [StringStruct(u'CompanyName', u'OWASP Foundation'),
         StringStruct(u'FileDescription', u'depscan - The Dependency Scanner'),
-        StringStruct(u'FileVersion', u'3.0.0.0'),
+        StringStruct(u'FileVersion', u'4.0.0.0'),
         StringStruct(u'InternalName', u'depscan'),
-        StringStruct(u'LegalCopyright', u'© Team Rosa. All rights reserved.'),
+        StringStruct(u'LegalCopyright', u'© OWASP Foundation. All rights reserved.'),
         StringStruct(u'OriginalFilename', u'depscan.exe'),
         StringStruct(u'ProductName', u'depscan'),
-        StringStruct(u'ProductVersion', u'3.0.0.0')])
+        StringStruct(u'ProductVersion', u'4.0.0.0')])
       ]),
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
