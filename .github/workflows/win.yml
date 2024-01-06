@@ -66,7 +66,7 @@ jobs:
     - name: Binary windows build
       run: |
         cd dep-scan
-        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --noupx
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --add-binary="../cdxgen-plugins-bin/plugins/dosai/dosai-windows-amd64.exe;local_bin/dosai" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --noupx
         .\dist\depscan.exe --help
         (Get-FileHash .\dist\depscan.exe).hash | Out-File -FilePath .\dist\depscan.exe.sha256
       env:
