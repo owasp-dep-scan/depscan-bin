@@ -76,7 +76,7 @@ jobs:
     - name: Binary amd64 build
       run: |
         cd dep-scan
-        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan-linux-amd64 --add-data="vendor:vendor" --add-binary="../cdxgen/cdxgen:local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-linux-amd64:local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-linux-amd64:local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/trivy/trivy-cdxgen-linux-amd64:local_bin/trivy" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-cdxgen-linux-amd64:local_bin/cargo-auditable" --collect-submodules depscan --noupx
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan-linux-amd64 --add-data="vendor:vendor" --add-binary="../cdxgen/cdxgen:local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-linux-amd64:local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-linux-amd64:local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/trivy/trivy-cdxgen-linux-amd64:local_bin/trivy" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-cdxgen-linux-amd64:local_bin/cargo-auditable" --add-binary="../cdxgen-plugins-bin/plugins/dosai/dosai-linux-amd64:local_bin/dosai" --collect-submodules depscan --noupx
         sha256sum ./dist/depscan-linux-amd64 > ./dist/depscan-linux-amd64.sha256
         ./dist/depscan-linux-amd64 --help
     - name: BLint
