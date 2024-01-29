@@ -28,6 +28,7 @@ jobs:
       with:
         repository: CycloneDX/cdxgen
         path: cdxgen
+        ref: 'v10.0.0'
     - name: Checkout cdxgen
       uses: actions/checkout@v4
       with:
