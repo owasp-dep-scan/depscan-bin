@@ -1,0 +1,145 @@
+name: Build darwin Binaries
+
+on:
+  workflow_dispatch:
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  Depscan-darwin-Build:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Trim CI agent
+      run: |
+        chmod +x free_disk_space.sh
+        ./free_disk_space.sh
+    - name: Checkout dep-scan
+      uses: actions/checkout@v4
+      with:
+        repository: owasp-dep-scan/dep-scan
+        path: dep-scan
+    - name: Checkout cdxgen
+      uses: actions/checkout@v4
+      with:
+        repository: CycloneDX/cdxgen
+        path: cdxgen
+    - name: Checkout cdxgen
+      uses: actions/checkout@v4
+      with:
+        repository: CycloneDX/cdxgen-plugins-bin
+        path: cdxgen-plugins-bin
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+    - uses: actions/setup-go@v5
+      with:
+        go-version: '^1.19.8'
+    - name: Install the Apple certificate
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ secrets.CERTIFICATES_P12 }}
+        INSTALLER_CERTIFICATE_BASE64: ${{ secrets.INSTALLER_CERTIFICATES_P12 }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      run: |
+        # create variables
+        CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+        INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/installer_certificate.p12
+        KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+        # import certificate from secrets
+        echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+        echo -n "$INSTALLER_CERTIFICATE_BASE64" | base64 --decode --output $INSTALLER_CERTIFICATE_PATH
+
+        # create temporary keychain
+        security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+        security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+        # import certificate to keychain
+        security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security import $INSTALLER_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+        security list-keychain -d user -s $KEYCHAIN_PATH
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+    - name: Install pyinstaller
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install setuptools pyinstaller
+        cd dep-scan
+        python3 -m pip install ".[dev]"
+    - name: Produce cdxgen pkg
+      run: |
+        cd cdxgen
+        npm install
+        npx caxa --input . --output "cdxgen" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
+        chmod +x cdxgen
+        ./cdxgen --version
+        sha256sum cdxgen > cdxgen.sha256
+    - name: Build cdxgen plugins
+      run: |
+        cd cdxgen-plugins-bin
+        bash build.sh
+    - name: Binary amd64 build
+      run: |
+        cd dep-scan
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan-darwin-amd64 --add-data="vendor:vendor" --add-binary="../cdxgen/cdxgen:local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-darwin-amd64:local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-darwin-amd64:local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/trivy/trivy-cdxgen-darwin-amd64:local_bin/trivy" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-cdxgen-darwin-amd64:local_bin/cargo-auditable" --add-binary="../cdxgen-plugins-bin/plugins/dosai/dosai-darwin-amd64:local_bin/dosai" --collect-submodules depscan --noupx --osx-bundle-identifier ${PRODUCT_IDENTIFIER} --target-architecture x86_64 --codesign-identity ${CODESIGN_ID} --osx-entitlements-file Entitlements.plist --icon ./depscan.icns
+        sha256sum ./dist/depscan-darwin-amd64 > ./dist/depscan-darwin-amd64.sha256
+        ./dist/depscan-darwin-amd64 --help
+      env:
+        CODESIGN_ID: ${{ secrets.CODESIGN_ID }}
+        PRODUCT_IDENTIFIER: ${{ secrets.PRODUCT_IDENTIFIER }}
+    - name: BLint
+      run: |
+        pip3 install blint
+        blint -i dep-scan/dist/depscan-darwin-amd64 -o /tmp/reports
+      env:
+        PYTHONIOENCODING: utf-8
+        LANG: en_US.utf-8
+      continue-on-error: true
+    - name: sign darwin build
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        mkdir /tmp/depscan
+        ditto ./dist /tmp/depscan/usr/local/bin
+        productbuild --identifier ${PRODUCT_IDENTIFIER} --sign ${INSTALLER_ID} --timestamp --root /tmp/depscan / depscan.pkg
+        xcrun altool --notarize-app --primary-bundle-id ${PRODUCT_IDENTIFIER} --username="${APPLE_USERNAME}" --password "${APPLE_PASSWORD}" --file ./depscan.pkg
+        sleep 120
+        xcrun stapler staple depscan.pkg
+      env:
+        CODESIGN_ID: ${{ secrets.CODESIGN_ID }}
+        INSTALLER_ID: ${{ secrets.INSTALLER_ID }}
+        PRODUCT_IDENTIFIER: ${{ secrets.PRODUCT_IDENTIFIER }}
+        APPLE_USERNAME: ${{ secrets.APPLE_USERNAME }}
+        APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+        PYTHONIOENCODING: utf-8
+        LANG: en_US.utf-8
+    - uses: actions/upload-artifact@v3
+      if: startsWith(github.ref, 'refs/tags/') != true
+      with:
+        path: ./dep-scan/dist
+        name: depscan-darwin-amd64
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          dep-scan/dist/depscan-darwin-amd64
+          dep-scan/dist/depscan-darwin-amd64.sha256
+    - name: Clean up keychain
+      if: ${{ always() }}
+      run: |
+        security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
