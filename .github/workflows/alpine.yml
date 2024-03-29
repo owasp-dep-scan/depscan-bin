@@ -22,16 +22,19 @@ jobs:
       with:
         repository: owasp-dep-scan/dep-scan
         path: dep-scan
+        ref: 'v5.2.14'
     - name: Checkout cdxgen
       uses: actions/checkout@v4
       with:
         repository: CycloneDX/cdxgen
         path: cdxgen
+        ref: 'v10.2.6'
     - name: Checkout cdxgen
       uses: actions/checkout@v4
       with:
         repository: CycloneDX/cdxgen-plugins-bin
         path: cdxgen-plugins-bin
+        ref: 'v1.5.8'
     - name: Install go
       run: |
         wget https://go.dev/dl/go1.19.3.linux-amd64.tar.gz
