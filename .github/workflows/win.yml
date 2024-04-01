@@ -18,18 +18,6 @@ jobs:
         repository: owasp-dep-scan/dep-scan
         path: dep-scan
         ref: 'v5.2.14'
-    - name: Checkout cdxgen
-      uses: actions/checkout@v4
-      with:
-        repository: CycloneDX/cdxgen
-        path: cdxgen
-        ref: 'v10.2.6'
-    - name: Checkout cdxgen
-      uses: actions/checkout@v4
-      with:
-        repository: CycloneDX/cdxgen-plugins-bin
-        path: cdxgen-plugins-bin
-        ref: 'v1.5.8'
     - uses: actions/setup-python@v5
       with:
         python-version: '3.11'
@@ -55,21 +43,10 @@ jobs:
         cd dep-scan
         python3 -m pip install ".[dev]"
         pyinstaller --help
-    - name: Produce cdxgen pkg
-      run: |
-        cd cdxgen
-        npm install
-        npx caxa --input . --output "cdxgen.exe" -- "{{caxa}}/node_modules/.bin/node" "{{caxa}}/bin/cdxgen.js"
-        .\cdxgen.exe --version
-        (Get-FileHash .\cdxgen.exe).hash | Out-File -FilePath .\cdxgen.exe.sha256
-    - name: Build cdxgen plugins
-      run: |
-        cd cdxgen-plugins-bin
-        .\build.ps1
     - name: Binary windows build
       run: |
         cd dep-scan
-        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --add-binary="../cdxgen/cdxgen.exe;local_bin" --add-binary="../cdxgen-plugins-bin/plugins/osquery/osqueryi-windows-amd64.exe;local_bin/osquery" --add-binary="../cdxgen-plugins-bin/plugins/goversion/goversion-windows-amd64.exe;local_bin/goversion" --add-binary="../cdxgen-plugins-bin/plugins/cargo-auditable/cargo-auditable-windows-amd64.exe;local_bin/cargo-auditable" --add-binary="../cdxgen-plugins-bin/plugins/dosai/dosai-windows-amd64.exe;local_bin/dosai" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --noupx
+        pyinstaller depscan/cli.py --noconfirm --log-level=WARN --nowindow --onefile --name depscan --add-data="vendor;vendor" --collect-submodules depscan --disable-windowed-traceback -i ../depscan.ico --version-file=../file_version_info.txt --noupx
         .\dist\depscan.exe --help
         (Get-FileHash .\dist\depscan.exe).hash | Out-File -FilePath .\dist\depscan.exe.sha256
       env:
